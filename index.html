@@ -5,140 +5,145 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Word Hunt Game - Progressive Themes</title>
   <style>
-  body {
-    font-family: sans-serif;
-    padding: 20px;
-    text-align: center;
-    margin: 0;
-  }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+      margin: 0;
+    }
 
-  #container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
-    margin-top: 20px;
-  }
-
-  #grid {
-    display: grid;
-    grid-template-columns: repeat(12, 30px);
-    grid-gap: 2px;
-    user-select: none;
-  }
-
-  .cell {
-    width: 30px;
-    height: 30px;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ccc;
-    cursor: pointer;
-  }
-
-  .selected {
-    background: yellow;
-  }
-
-  .found {
-    background: lightgreen;
-  }
-
-  #wordsContainer {
-    text-align: left;
-    max-width: 300px;
-    user-select: none;
-  }
-
-  #wordsTitle {
-    display: none;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  #wordList {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-  }
-
-  #wordList li {
-    margin-bottom: 8px;
-    font-size: 16px;
-  }
-
-  .translation {
-    color: green;
-    margin-left: 8px;
-    font-size: 0.9em;
-    font-style: normal;
-  }
-
-  .found-word {
-    color: green;
-    font-weight: bold;
-    text-decoration: none !important;
-  }
-
-  button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  /* ---------- RESPONSIVE POUR MOBILES ---------- */
-  @media (max-width: 768px) {
     #container {
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin-top: 20px;
     }
 
     #grid {
-      grid-template-columns: repeat(12, minmax(6vw, 30px));
+      display: grid;
+      grid-template-columns: repeat(12, 30px);
+      grid-gap: 2px;
+      user-select: none;
     }
 
     .cell {
-      width: 6vw;
-      height: 6vw;
-      font-size: 4vw;
+      width: 30px;
+      height: 30px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .selected {
+      background: yellow;
+    }
+
+    .found {
+      background: lightgreen;
     }
 
     #wordsContainer {
-      max-width: 90%;
-      text-align: center;
+      text-align: left;
+      max-width: 300px;
+      user-select: none;
     }
 
-    #wordList li {
-      font-size: 14px;
-    }
-
-    .translation {
-      font-size: 0.8em;
-    }
-
-    button {
-      font-size: 14px;
-      padding: 8px 16px;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    h2, h3 {
+    #wordsTitle {
+      display: none;
+      margin-bottom: 5px;
+      font-weight: bold;
       font-size: 18px;
     }
 
-    #message {
+    #wordList {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    #wordList li {
+      margin-bottom: 8px;
       font-size: 16px;
     }
-  }
-</style>
+
+    .translation {
+      color: green;
+      margin-left: 8px;
+      font-size: 0.9em;
+      font-style: normal;
+    }
+
+    .found-word {
+      color: green;
+      font-weight: bold;
+      text-decoration: none !important;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* ---------- RESPONSIVE POUR MOBILES ---------- */
+    @media (max-width: 768px) {
+      #container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      #grid {
+        grid-template-columns: repeat(12, minmax(6vw, 30px));
+      }
+
+      .cell {
+        width: 6vw;
+        height: 6vw;
+        font-size: 4vw;
+      }
+
+      #wordsContainer {
+        max-width: 90%;
+        text-align: center;
+      }
+
+      #wordList li {
+        font-size: 14px;
+      }
+
+      .translation {
+        font-size: 0.8em;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2, h3 {
+        font-size: 18px;
+      }
+
+      #message {
+        font-size: 16px;
+      }
+    }
+  </style>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
 </head>
 <body>
   <h1>Word Hunt</h1>
@@ -333,170 +338,149 @@
           if (grid[r][c] === '') {
             grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
           }
+        }
+      }
+
+      // création visuelle de la grille
+      for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
           const cell = document.createElement('div');
           cell.className = 'cell';
+          cell.textContent = grid[r][c];
           cell.dataset.row = r;
           cell.dataset.col = c;
-          cell.textContent = grid[r][c];
-          cell.addEventListener('click', () => selectCell(cell));
+          cell.addEventListener('click', () => cellClicked(cell));
           gridDiv.appendChild(cell);
         }
       }
     }
 
-    const directions = [
-      [0, 1],   // horizontal droite
-      [1, 0],   // vertical bas
-      [1, 1]    // diagonal bas-droite
-    ];
-
     function placeWord(word) {
-      let placed = false;
-      let attempts = 0;
-      while (!placed && attempts < 1000) {
+      const directions = [
+        {dr: 0, dc: 1},  // droite
+        {dr: 1, dc: 0},  // bas
+        {dr: 1, dc: 1},  // diagonale bas-droite
+        {dr: 0, dc: -1}, // gauche
+        {dr: -1, dc: 0}, // haut
+        {dr: -1, dc: -1},// diagonale haut-gauche
+        {dr: 1, dc: -1}, // diagonale bas-gauche
+        {dr: -1, dc: 1}  // diagonale haut-droite
+      ];
+
+      for (let attempt = 0; attempt < 100; attempt++) {
         const dir = directions[Math.floor(Math.random() * directions.length)];
-        const maxRow = dir[0] === 1 ? gridSize - word.length : gridSize - 1;
-        const maxCol = dir[1] === 1 ? gridSize - word.length : gridSize - 1;
-        const row = Math.floor(Math.random() * (maxRow + 1));
-        const col = Math.floor(Math.random() * (maxCol + 1));
-        if (canPlace(word, row, col, dir)) {
-          for (let i = 0; i < word.length; i++) {
-            grid[row + i * dir[0]][col + i * dir[1]] = word[i];
+        const startRow = Math.floor(Math.random() * gridSize);
+        const startCol = Math.floor(Math.random() * gridSize);
+
+        let r = startRow, c = startCol;
+        let fits = true;
+
+        for (const letter of word) {
+          if (r < 0 || r >= gridSize || c < 0 || c >= gridSize) {
+            fits = false;
+            break;
           }
-          placed = true;
-        }
-        attempts++;
-      }
-      if (!placed) {
-        console.warn(`Impossible de placer le mot : ${word}`);
-      }
-    }
-
-    function canPlace(word, row, col, dir) {
-      for (let i = 0; i < word.length; i++) {
-        let r = row + i * dir[0];
-        let c = col + i * dir[1];
-        if (r < 0 || c < 0 || r >= gridSize || c >= gridSize) return false;
-        if (grid[r][c] !== '') return false; // interdit de croiser mots (même lettre)
-      }
-      return true;
-    }
-
-    function selectCell(cell) {
-      // éviter sélection mots déjà trouvés
-      if (cell.classList.contains('found')) return;
-
-      // sélection en ligne seulement (pour simplifier)
-      if (selectedCells.length === 0) {
-        selectedCells.push(cell);
-        cell.classList.add('selected');
-      } else {
-        const first = selectedCells[0];
-        const r0 = parseInt(first.dataset.row);
-        const c0 = parseInt(first.dataset.col);
-        const r1 = parseInt(cell.dataset.row);
-        const c1 = parseInt(cell.dataset.col);
-
-        // vérifier alignement horizontal, vertical ou diagonal
-        const dr = r1 - r0;
-        const dc = c1 - c0;
-        const steps = Math.max(Math.abs(dr), Math.abs(dc));
-        const stepR = dr === 0 ? 0 : dr / steps;
-        const stepC = dc === 0 ? 0 : dc / steps;
-
-        if (![0,1,-1].includes(stepR) || ![0,1,-1].includes(stepC)) {
-          clearSelection();
-          selectedCells.push(cell);
-          cell.classList.add('selected');
-          return;
+          const existing = grid[r][c];
+          if (existing !== '' && existing !== letter) {
+            fits = false;
+            break;
+          }
+          r += dir.dr;
+          c += dir.dc;
         }
 
-        // nettoyer sélection précédente
-        clearSelection();
-        selectedCells = [];
-
-        // sélectionner toutes les cellules entre first et cell
-        for (let i = 0; i <= steps; i++) {
-          const rr = r0 + i * stepR;
-          const cc = c0 + i * stepC;
-          const selector = `.cell[data-row="${rr}"][data-col="${cc}"]`;
-          const c = document.querySelector(selector);
-          selectedCells.push(c);
-          c.classList.add('selected');
+        if (fits) {
+          r = startRow;
+          c = startCol;
+          for (const letter of word) {
+            grid[r][c] = letter;
+            r += dir.dr;
+            c += dir.dc;
+          }
+          return true;
         }
-
-        checkSelectedWord();
       }
-    }
-
-    function clearSelection() {
-      selectedCells.forEach(c => c.classList.remove('selected'));
-      selectedCells = [];
-    }
-
-    function checkSelectedWord() {
-      const word = selectedCells.map(c => c.textContent).join('');
-      const reverseWord = word.split('').reverse().join('');
-      if (currentWords.includes(word)) {
-        markFound(word);
-      } else if (currentWords.includes(reverseWord)) {
-        markFound(reverseWord);
-      } else {
-        clearSelection();
-      }
-    }
-
-    function markFound(word) {
-      foundWords.add(word);
-      // colorer cellules
-      for (const c of selectedCells) {
-        c.classList.add('found');
-        c.classList.remove('selected');
-      }
-      updateWordList();
-      clearSelection();
-      messageDiv.textContent = `Bravo ! Vous avez trouvé : ${word}`;
-
-      if (foundWords.size === currentWords.length) {
-        messageDiv.textContent = `Bravo ! Vous avez trouvé tous les mots du thème "${themeNames[currentThemeIndex]}" !`;
-        setTimeout(() => {
-          currentThemeIndex++;
-          loadTheme(currentThemeIndex);
-        }, 2500);
-      }
+      // Si on ne peut pas placer le mot, ignorer (très rare)
+      return false;
     }
 
     function displayWords() {
       wordList.innerHTML = '';
-      currentWords.forEach(word => {
+      for (const word of currentWords) {
         const li = document.createElement('li');
         li.textContent = word;
-        const span = document.createElement('span');
-        span.textContent = ` (${translations[word] || "??"})`;
-        span.className = 'translation';
-        li.appendChild(span);
-        wordList.appendChild(li);
-      });
-    }
-
-    function updateWordList() {
-      [...wordList.children].forEach(li => {
-        const text = li.firstChild.textContent;
-        if (foundWords.has(text)) {
-          li.classList.add('found-word');
-          // changer couleur traduction en vert aussi
-          li.querySelector('.translation').style.color = 'green';
+        if (translations[word]) {
+          const span = document.createElement('span');
+          span.className = 'translation';
+          span.textContent = `(${translations[word]})`;
+          li.appendChild(span);
         }
-      });
+        wordList.appendChild(li);
+      }
     }
 
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4CAF50">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
-  }
+    function cellClicked(cell) {
+      if (cell.classList.contains('found')) return;
+      const index = selectedCells.indexOf(cell);
+      if (index === -1) {
+        selectedCells.push(cell);
+        cell.classList.add('selected');
+      } else {
+        // Déselectionner cellule si recliquée
+        selectedCells.splice(index, 1);
+        cell.classList.remove('selected');
+      }
+
+      checkSelection();
+    }
+
+    function checkSelection() {
+      if (selectedCells.length < 2) return;
+
+      const selectedWord = selectedCells.map(cell => cell.textContent).join('');
+      const selectedWordRev = selectedCells.map(cell => cell.textContent).reverse().join('');
+
+      if (currentWords.includes(selectedWord) && !foundWords.has(selectedWord)) {
+        markFoundWord(selectedWord);
+      } else if (currentWords.includes(selectedWordRev) && !foundWords.has(selectedWordRev)) {
+        markFoundWord(selectedWordRev);
+      }
+    }
+
+    function markFoundWord(word) {
+      foundWords.add(word);
+      for (const cell of selectedCells) {
+        cell.classList.remove('selected');
+        cell.classList.add('found');
+      }
+      updateWordList(word);
+      selectedCells = [];
+      messageDiv.textContent = `Bravo ! Vous avez trouvé : ${word} (${translations[word] || ""})`;
+
+      if (foundWords.size === currentWords.length) {
+        currentThemeIndex++;
+        setTimeout(() => loadTheme(currentThemeIndex), 2000);
+      }
+    }
+
+    function updateWordList(word) {
+      for (const li of wordList.children) {
+        if (li.textContent.startsWith(word)) {
+          li.classList.add('found-word');
+          break;
+        }
+      }
+    }
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(() => {
+          console.log('Service Worker registered.');
+        }).catch(console.error);
+      });
+    }
   </script>
+
 </body>
 </html>
