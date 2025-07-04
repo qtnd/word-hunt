@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Word Hunt Game - Progressive Themes</title>
+  <style>
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
+  }
+
+  #container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(12, 30px);
+    grid-gap: 2px;
+    user-select: none;
+  }
+
+  .cell {
+    width: 30px;
+    height: 30px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+
+  .selected {
+    background: yellow;
+  }
+
+  .found {
+    background: lightgreen;
+  }
+
+  #wordsContainer {
+    text-align: left;
+    max-width: 300px;
+    user-select: none;
+  }
+
+  #wordsTitle {
+    display: none;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  #wordList {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  #wordList li {
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+
+  .translation {
+    color: green;
+    margin-left: 8px;
+    font-size: 0.9em;
+    font-style: normal;
+  }
+
+  .found-word {
+    color: green;
+    font-weight: bold;
+    text-decoration: none !important;
+  }
+
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* ---------- RESPONSIVE POUR MOBILES ---------- */
+  @media (max-width: 768px) {
+    #container {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #grid {
+      grid-template-columns: repeat(12, minmax(6vw, 30px));
+    }
+
+    .cell {
+      width: 6vw;
+      height: 6vw;
+      font-size: 4vw;
+    }
+
+    #wordsContainer {
+      max-width: 90%;
+      text-align: center;
+    }
+
+    #wordList li {
+      font-size: 14px;
+    }
+
+    .translation {
+      font-size: 0.8em;
+    }
+
+    button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    h2, h3 {
+      font-size: 18px;
+    }
+
+    #message {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Word Hunt</h1>
+  <button id="startBtn" onclick="startGame()">Start Game</button>
+  <h2 id="themeTitle"></h2>
+
+  <div id="container">
+    <div id="grid"></div>
+
+    <div id="wordsContainer">
+      <h3 id="wordsTitle">Words to Find:</h3>
+      <ul id="wordList"></ul>
+    </div>
+  </div>
+
+  <div id="message" style="font-size: 1.2em; margin-top: 20px; color: green;"></div>
+
+  <script>
+    const themes = {
+      "Fruits": ["apple", "banana", "cherry", "orange", "mango", "peach", "kiwi", "grape", "lemon", "pear"],
+      "Animals": ["lion", "tiger", "elephant", "giraffe", "zebra", "monkey", "bear", "dolphin", "rabbit", "fox"],
+      "Countries": ["france", "canada", "brazil", "egypt", "japan", "india", "mexico", "spain", "italy", "china"],
+      "Weather": ["rain", "snow", "thunder", "lightning", "wind", "storm", "sunshine", "cloud", "fog", "drizzle"],
+      "School Supplies": ["pencil", "eraser", "ruler", "notebook", "backpack", "pen", "scissors", "glue", "paper", "marker"],
+      "Rooms in a House": ["kitchen", "bathroom", "bedroom", "attic", "garage", "hallway", "basement", "livingroom", "diningroom", "closet"],
+      "Jobs / Professions": ["doctor", "teacher", "engineer", "lawyer", "artist", "farmer", "nurse", "chef", "pilot", "writer"],
+      "Science Terms": ["atom", "gravity", "energy", "molecule", "force", "planet", "cell", "oxygen", "electron", "proton"],
+      "Transportation": ["car", "bus", "train", "airplane", "bicycle", "boat", "scooter", "subway", "truck", "tram"],
+      "Time Words": ["second", "minute", "hour", "day", "week", "month", "year", "decade", "century", "moment"]
+    };
+
+    const translations = {
+      "APPLE": "Pomme",
+      "BANANA": "Banane",
+      "CHERRY": "Cerise",
+      "ORANGE": "Orange",
+      "MANGO": "Mangue",
+      "PEACH": "Pêche",
+      "KIWI": "Kiwi",
+      "GRAPE": "Raisin",
+      "LEMON": "Citron",
+      "PEAR": "Poire",
+      "LION": "Lion",
+      "TIGER": "Tigre",
+      "ELEPHANT": "Éléphant",
+      "GIRAFFE": "Girafe",
+      "ZEBRA": "Zèbre",
+      "MONKEY": "Singe",
+      "BEAR": "Ours",
+      "DOLPHIN": "Dauphin",
+      "RABBIT": "Lapin",
+      "FOX": "Renard",
+      "FRANCE": "France",
+      "CANADA": "Canada",
+      "BRAZIL": "Brésil",
+      "EGYPT": "Égypte",
+      "JAPAN": "Japon",
+      "INDIA": "Inde",
+      "MEXICO": "Mexique",
+      "SPAIN": "Espagne",
+      "ITALY": "Italie",
+      "CHINA": "Chine",
+      "RAIN": "Pluie",
+      "SNOW": "Neige",
+      "THUNDER": "Tonnerre",
+      "LIGHTNING": "Éclair",
+      "WIND": "Vent",
+      "STORM": "Orage",
+      "SUNSHINE": "Soleil",
+      "CLOUD": "Nuage",
+      "FOG": "Brouillard",
+      "DRIZZLE": "Bruine",
+      "PENCIL": "Crayon",
+      "ERASER": "Gomme",
+      "RULER": "Règle",
+      "NOTEBOOK": "Cahier",
+      "BACKPACK": "Sac à dos",
+      "PEN": "Stylo",
+      "SCISSORS": "Ciseaux",
+      "GLUE": "Colle",
+      "PAPER": "Papier",
+      "MARKER": "Marqueur",
+      "KITCHEN": "Cuisine",
+      "BATHROOM": "Salle de bain",
+      "BEDROOM": "Chambre",
+      "ATTIC": "Grenier",
+      "GARAGE": "Garage",
+      "HALLWAY": "Couloir",
+      "BASEMENT": "Sous-sol",
+      "LIVINGROOM": "Salon",
+      "DININGROOM": "Salle à manger",
+      "CLOSET": "Placard",
+      "DOCTOR": "Médecin",
+      "TEACHER": "Professeur",
+      "ENGINEER": "Ingénieur",
+      "LAWYER": "Avocat",
+      "ARTIST": "Artiste",
+      "FARMER": "Agriculteur",
+      "NURSE": "Infirmier",
+      "CHEF": "Chef cuisinier",
+      "PILOT": "Pilote",
+      "WRITER": "Écrivain",
+      "ATOM": "Atome",
+      "GRAVITY": "Gravité",
+      "ENERGY": "Énergie",
+      "MOLECULE": "Molécule",
+      "FORCE": "Force",
+      "PLANET": "Planète",
+      "CELL": "Cellule",
+      "OXYGEN": "Oxygène",
+      "ELECTRON": "Électron",
+      "PROTON": "Proton",
+      "CAR": "Voiture",
+      "BUS": "Bus",
+      "TRAIN": "Train",
+      "AIRPLANE": "Avion",
+      "BICYCLE": "Vélo",
+      "BOAT": "Bateau",
+      "SCOOTER": "Scooter",
+      "SUBWAY": "Métro",
+      "TRUCK": "Camion",
+      "TRAM": "Tramway",
+      "SECOND": "Seconde",
+      "MINUTE": "Minute",
+      "HOUR": "Heure",
+      "DAY": "Jour",
+      "WEEK": "Semaine",
+      "MONTH": "Mois",
+      "YEAR": "Année",
+      "DECADE": "Décennie",
+      "CENTURY": "Siècle",
+      "MOMENT": "Instant"
+    };
+
+    const themeNames = Object.keys(themes);
+    const gridSize = 12;
+    let currentThemeIndex = 0;
+    let currentWords = [];
+    let grid = [];
+    let selectedCells = [];
+    let foundWords = new Set();
+
+    const themeTitle = document.getElementById('themeTitle');
+    const gridDiv = document.getElementById('grid');
+    const wordList = document.getElementById('wordList');
+    const messageDiv = document.getElementById('message');
+    const wordsTitle = document.getElementById('wordsTitle');
+    const startBtn = document.getElementById('startBtn');
+
+    function startGame() {
+      startBtn.style.display = 'none';  // cacher le bouton au début de la partie
+      currentThemeIndex = 0;
+      foundWords.clear();
+      messageDiv.textContent = '';
+      wordsTitle.style.display = 'block';  // Affiche le titre "Words to Find"
+      loadTheme(currentThemeIndex);
+    }
+
+    function loadTheme(index) {
+      if (index >= themeNames.length) {
+        themeTitle.textContent = '🎉 Félicitations ! Vous avez trouvé tous les mots de tous les thèmes ! 🎉';
+        gridDiv.innerHTML = '';
+        wordList.innerHTML = '';
+        messageDiv.textContent = '';
+        wordsTitle.style.display = 'none';
+        startBtn.style.display = 'inline-block'; // montrer le bouton à la fin
+        return;
+      }
+      currentWords = themes[themeNames[index]].map(w => w.toUpperCase());
+      themeTitle.textContent = `Theme: ${themeNames[index]}`;
+      foundWords.clear();
+      selectedCells = [];
+      messageDiv.textContent = '';
+      wordsTitle.style.display = 'block';
+      generateGrid();
+      displayWords();
+    }
+
+    function generateGrid() {
+      grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+      gridDiv.innerHTML = '';
+
+      // placer les mots aléatoirement sans croisement
+      for (const word of currentWords) {
+        placeWord(word);
+      }
+
+      // remplir cases vides avec lettres aléatoires
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
+          if (grid[r][c] === '') {
+            grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+          }
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.textContent = grid[r][c];
+          cell.addEventListener('click', () => selectCell(cell));
+          gridDiv.appendChild(cell);
+        }
+      }
+    }
+
+    const directions = [
+      [0, 1],   // horizontal droite
+      [1, 0],   // vertical bas
+      [1, 1]    // diagonal bas-droite
+    ];
+
+    function placeWord(word) {
+      let placed = false;
+      let attempts = 0;
+      while (!placed && attempts < 1000) {
+        const dir = directions[Math.floor(Math.random() * directions.length)];
+        const maxRow = dir[0] === 1 ? gridSize - word.length : gridSize - 1;
+        const maxCol = dir[1] === 1 ? gridSize - word.length : gridSize - 1;
+        const row = Math.floor(Math.random() * (maxRow + 1));
+        const col = Math.floor(Math.random() * (maxCol + 1));
+        if (canPlace(word, row, col, dir)) {
+          for (let i = 0; i < word.length; i++) {
+            grid[row + i * dir[0]][col + i * dir[1]] = word[i];
+          }
+          placed = true;
+        }
+        attempts++;
+      }
+      if (!placed) {
+        console.warn(`Impossible de placer le mot : ${word}`);
+      }
+    }
+
+    function canPlace(word, row, col, dir) {
+      for (let i = 0; i < word.length; i++) {
+        let r = row + i * dir[0];
+        let c = col + i * dir[1];
+        if (r < 0 || c < 0 || r >= gridSize || c >= gridSize) return false;
+        if (grid[r][c] !== '') return false; // interdit de croiser mots (même lettre)
+      }
+      return true;
+    }
+
+    function selectCell(cell) {
+      // éviter sélection mots déjà trouvés
+      if (cell.classList.contains('found')) return;
+
+      // sélection en ligne seulement (pour simplifier)
+      if (selectedCells.length === 0) {
+        selectedCells.push(cell);
+        cell.classList.add('selected');
+      } else {
+        const first = selectedCells[0];
+        const r0 = parseInt(first.dataset.row);
+        const c0 = parseInt(first.dataset.col);
+        const r1 = parseInt(cell.dataset.row);
+        const c1 = parseInt(cell.dataset.col);
+
+        // vérifier alignement horizontal, vertical ou diagonal
+        const dr = r1 - r0;
+        const dc = c1 - c0;
+        const steps = Math.max(Math.abs(dr), Math.abs(dc));
+        const stepR = dr === 0 ? 0 : dr / steps;
+        const stepC = dc === 0 ? 0 : dc / steps;
+
+        if (![0,1,-1].includes(stepR) || ![0,1,-1].includes(stepC)) {
+          clearSelection();
+          selectedCells.push(cell);
+          cell.classList.add('selected');
+          return;
+        }
+
+        // nettoyer sélection précédente
+        clearSelection();
+        selectedCells = [];
+
+        // sélectionner toutes les cellules entre first et cell
+        for (let i = 0; i <= steps; i++) {
+          const rr = r0 + i * stepR;
+          const cc = c0 + i * stepC;
+          const selector = `.cell[data-row="${rr}"][data-col="${cc}"]`;
+          const c = document.querySelector(selector);
+          selectedCells.push(c);
+          c.classList.add('selected');
+        }
+
+        checkSelectedWord();
+      }
+    }
+
+    function clearSelection() {
+      selectedCells.forEach(c => c.classList.remove('selected'));
+      selectedCells = [];
+    }
+
+    function checkSelectedWord() {
+      const word = selectedCells.map(c => c.textContent).join('');
+      const reverseWord = word.split('').reverse().join('');
+      if (currentWords.includes(word)) {
+        markFound(word);
+      } else if (currentWords.includes(reverseWord)) {
+        markFound(reverseWord);
+      } else {
+        clearSelection();
+      }
+    }
+
+    function markFound(word) {
+      foundWords.add(word);
+      // colorer cellules
+      for (const c of selectedCells) {
+        c.classList.add('found');
+        c.classList.remove('selected');
+      }
+      updateWordList();
+      clearSelection();
+      messageDiv.textContent = `Bravo ! Vous avez trouvé : ${word}`;
+
+      if (foundWords.size === currentWords.length) {
+        messageDiv.textContent = `Bravo ! Vous avez trouvé tous les mots du thème "${themeNames[currentThemeIndex]}" !`;
+        setTimeout(() => {
+          currentThemeIndex++;
+          loadTheme(currentThemeIndex);
+        }, 2500);
+      }
+    }
+
+    function displayWords() {
+      wordList.innerHTML = '';
+      currentWords.forEach(word => {
+        const li = document.createElement('li');
+        li.textContent = word;
+        const span = document.createElement('span');
+        span.textContent = ` (${translations[word] || "??"})`;
+        span.className = 'translation';
+        li.appendChild(span);
+        wordList.appendChild(li);
+      });
+    }
+
+    function updateWordList() {
+      [...wordList.children].forEach(li => {
+        const text = li.firstChild.textContent;
+        if (foundWords.has(text)) {
+          li.classList.add('found-word');
+          // changer couleur traduction en vert aussi
+          li.querySelector('.translation').style.color = 'green';
+        }
+      });
+    }
+
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4CAF50">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+  </script>
+</body>
+</html>
