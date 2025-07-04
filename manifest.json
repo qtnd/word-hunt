@@ -1,11 +1,10 @@
 {
-  "name": "Jeu de Mots Cachés",
-  "short_name": "Mots Cachés",
-  "start_url": "./",
+  "name": "Word Hunt Game",
+  "short_name": "WordHunt",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4CAF50",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icons/icon-192.png",
